@@ -4,12 +4,13 @@ import time
 from codrone_edu.drone import *
 from codrone_edu.protocol import *
 
-#Setup
+# Setup
 drone = Drone()
 drone.pair()
 inAir = False
 
-#Client
+
+# Client
 def child(conn):
     global old_time
     global blinkCounter
@@ -17,7 +18,7 @@ def child(conn):
     while True:
         val = conn.recv()
 
-        #Takeoff and Land
+        # Takeoff and Land
         if val >= 1.5:
             if inAir == False:
                 print("Take-Off")
@@ -29,11 +30,13 @@ def child(conn):
                 drone.land()
                 inAir = False
 
-#Server
+
+# Server
 def mother(address):
     serv = Listener(address)
     while True:
         client = serv.accept()
         child(client)
 
-mother(('', 5001))
+
+mother(("", 5001))
