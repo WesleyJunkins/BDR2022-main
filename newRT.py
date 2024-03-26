@@ -80,9 +80,6 @@ def eeg_handler(address: str,*args):
             alpha = args[0]
             brainWaves[2] = alpha
         if brainWaves[0] != 0 and brainWaves[1] != 0 and brainWaves[2] != 0:
-            # print(timestampStr)
-            # print(brainWaves)
-            # print("")
 
             #Calculate engagement
             if brainWaves[0] + brainWaves[2] != 0:
