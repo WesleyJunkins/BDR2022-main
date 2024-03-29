@@ -4,6 +4,7 @@ import time
 from pythonosc import dispatcher
 from pythonosc import osc_server
 from codrone_edu.drone import *
+from collections import deque
 
 c = Client(("localhost", 5001))
 
@@ -40,8 +41,7 @@ brainWaves = [0, 0, 0]
 lastEngagement = 0
 
 # Array for holding 5 values
-fiveValues = [0, 0, 0, 0, 0]
-
+fiveValues = deque([0, 0, 0, 0, 0])
 
 # Send EEG recordings to server
 def eeg_handler(address: str, *args):
@@ -81,12 +81,10 @@ def eeg_handler(address: str, *args):
 
             # Calculate engagement
             if brainWaves[0] + brainWaves[2] != 0:
-                engagement = abs(brainWaves[1]) / (
-                    abs(brainWaves[0]) + abs(brainWaves[2])
-                )
+                engagement = abs(brainWaves[1]) / (abs(brainWaves[0]) + abs(brainWaves[2]))
 
                 # Calculate the average of 5 values
-                fiveValues.pop(0)
+                fiveValues.popleft()
                 fiveValues.append(engagement)
                 average = abs(sum(fiveValues) / 5)
 
@@ -142,5 +140,4 @@ if __name__ == "__main__":
         server.serve_forever()
 
     except KeyboardInterrupt:
-        pass
-    # drone.close()
+        drone.land()
